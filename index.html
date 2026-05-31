@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>马尾绣 · 时光密码</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,Microsoft YaHei}
+body{background:#f5f0e9;color:#222;line-height:1.7;padding:0;margin:0}
+.container{max-width:750px;margin:0 auto;background:#fff;min-height:100vh}
+.page{display:none;padding:24px;min-height:100vh}
+.page.active{display:block}
+.cover{text-align:center;padding:80px 24px}
+.cover h1{font-size:32px;color:#7c4b2e;margin-bottom:12px}
+.cover p{color:#666;margin-bottom:40px}
+.btn{display:block;width:85%;margin:0 auto;padding:14px;background:#8c5a3c;color:#fff;border:none;border-radius:10px;font-size:16px;text-align:center;cursor:pointer}
+
+.mis-item{border:1px solid #e2d4c7;border-radius:12px;margin:16px 0;overflow:hidden;background:#f9f2e7}
+.mis-title{padding:18px 20px;cursor:pointer;font-size:18px;color:#444}
+.mis-content{max-height:0;overflow:hidden;transition:max-height 0.4s ease;}
+.mis-content p{padding:12px 20px 18px;border-top:1px solid #e2d4c7;margin:0;line-height:1.7;color:#555}
+
+.tech-step{margin:20px 0}
+.step-item{margin:10px 0;padding:12px 16px;border-left:4px solid #8c5a3c;background:#faf5f0;border-radius:0 8px 8px 0;cursor:pointer;overflow:hidden}
+.step-img{width:100%;margin-top:10px;border-radius:8px;display:none}
+.step-item.open .step-img{display:block}
+.step-content{max-height:0;overflow:hidden;transition:max-height 0.4s ease;}
+.step-item.open .step-content{max-height:1000px;}
+
+.timeline{margin:30px 0}
+.time-bar{display:flex;overflow-x:auto;padding:10px 0;gap:12px}
+.time-node{white-space:nowrap;padding:8px 14px;border:1px solid #d4c2b0;border-radius:20px;cursor:pointer}
+.time-node.active{background:#8c5a3c;color:#fff;border-color:#8c5a3c}
+.time-desc{margin-top:16px;min-height:80px;padding:12px;border-radius:8px;background:#faf5f0}
+.question-box{margin:24px 0}
+.option{padding:12px 16px;border:1px solid #ddd;border-radius:8px;margin:8px 0;cursor:pointer}
+.img-tip{margin:4px 0;font-weight:500;}
+.correct-text{color:#4caf50;}
+.wrong-text{color:#f44336;}
+img{width:100%;border-radius:12px;margin:16px 0}
+
+/* 成绩弹窗样式 */
+.result-box{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background: #fff;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  text-align: center;
+  z-index: 999;
+  display: none;
+  width: 85%;
+  max-width: 400px;
+}
+.result-box h3{
+  color: #8c5a3c;
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+.result-box p{
+  font-size: 16px;
+  margin: 8px 0;
+}
+.result-box .close-btn{
+  margin-top: 20px;
+  padding: 10px 25px;
+  background: #8c5a3c;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- 封面页 -->
+<div class="page active" id="p0">
+  <div class="cover">
+    <img src="https://rs-channel.huanqiucdn.cn/imageDir/968933e39030e67e8061417cc0f34785.jpeg" alt="马尾绣非遗主视觉">
+    <h1>马尾绣 · 时光密码</h1>
+    <p>一针一线，解锁水族千年非遗文明</p>
+    <button class="btn" onclick="nextPage()">点击开启沉浸式探索</button>
+  </div>
+</div>
+
+<!-- 开篇页 -->
+<div class="page" id="p1">
+  <h2 style="margin:20px 0 12px">文明序章</h2>
+  <img src="https://rs-channel.huanqiucdn.cn/imageDir/0393e3404c66adacbeaf108fa8570715.jpeg" alt="马尾绣浮雕纹样特写">
+  <p>提起刺绣，我们大多只会想到平整精致的平面纹样。但在贵州三都的深山里，藏着一门独树一帜的古老技艺。它以马尾为骨架，以彩线为肌理，水族没有通用文字，便把迁徙、信仰与岁月，全部绣进布匹之中。这就是被称为刺绣活化石的水族马尾绣。为了更好了解马尾绣，我们首先要打破一些认知误区。</p>
+  <button class="btn" style="margin-top:40px" onclick="nextPage()">打破认知误区</button>
+</div>
+
+<!-- 误区板块 -->
+<div class="page" id="p2">
+  <h2 style="margin:20px 0 24px;text-align:center;font-size:24px;color:#333">点击”误区“查看解析</h2>
+  <div class="misconception" style="padding:0 10px">
+    <div class="mis-item">
+      <div class="mis-title" onclick="toggle(this)">误区1：马尾绣只是用马尾当线刺绣，没有独特工艺</div>
+      <div class="mis-content">
+        <p>马尾绣是以马尾为芯的缠线工艺，能做出立体浮雕质感，和平面刺绣有着本质区别。</p>
+      </div>
+    </div>
+    <div class="mis-item">
+      <div class="mis-title" onclick="toggle(this)">误区2：马尾绣只是老旧物件，没有价值</div>
+      <div class="mis-content">
+        <p>如今马尾绣已发展为文创产品，带动乡村女性就业，实现非遗产业化。</p>
+      </div>
+    </div>
+    <div class="mis-item">
+      <div class="mis-title" onclick="toggle(this)">误区3：马尾绣早已失传，仅存在博物馆</div>
+      <div class="mis-content">
+        <p>2006年入选国家级非遗后，各地传习所持续开班，年轻传承人不断加入。</p>
+      </div>
+    </div>
+    <div class="mis-item">
+      <div class="mis-title" onclick="toggle(this)">误区4：马尾绣制作简单，很容易上手</div>
+      <div class="mis-content">
+        <p>完整工序繁复耗时，一件精品绣品往往需要数月乃至数年才能完成。</p>
+      </div>
+    </div>
+  </div>
+  <button class="btn" style="margin:40px auto 0" onclick="nextPage()">查看千年时间轴</button>
+</div>
+
+<!-- 时间轴 -->
+<div class="page" id="p3">
+  <h2 style="margin:20px 0 12px">马尾绣千年时间轴</h2>
+  <div class="timeline">
+    <div class="time-bar">
+      <div class="time-node active" onclick="switchTime(0,this)">上古·唐宋</div>
+      <div class="time-node" onclick="switchTime(1,this)">元·明·清</div>
+      <div class="time-node" onclick="switchTime(2,this)">晚清—20世纪末</div>
+      <div class="time-node" onclick="switchTime(3,this)">2006至今</div>
+    </div>
+    <div class="time-desc" id="timeText">
+      上古至唐宋时期，水族先民牧马迁徙，就地取材用马尾制作刺绣，以纹样记录图腾与族群历史。
+    </div>
+  </div>
+  <button class="btn" style="margin-top:40px" onclick="nextPage()">查看古法工艺</button>
+</div>
+
+<!-- 古法工艺页 -->
+<div class="page" id="p4">
+  <h2 style="margin:20px 0 12px">古法五道核心工序</h2>
+<h2 style="margin:20px 0 8px">点击工序查看相关图示</h2>
+
+  <div class="tech-step">
+    <div class="step-item" onclick="toggleStep(this)">
+      ① 择取梳理马鬃纤维
+      <div class="step-content">
+        <img class="step-img" src="https://ts1.tc.mm.bing.net/th/id/R-C.9e10bf1c1e10267fdd54a598762f1d45?rik=hIe0JZQwtkDysA&riu=http%3a%2f%2fwww.cpon.cn%2fuploads%2f20170705%2f3.jpg&ehk=i696isuvikhKd9PetSXfhb8K7sd3rjI95lQ9WRxA4Gs%3d&risl=&pid=ImgRaw&r=0" alt="梳理马鬃原料">
+      </div>
+    </div>
+    <div class="step-item" onclick="toggleStep(this)">
+      ② 丝线紧密缠绕马尾做骨架
+      <div class="step-content">
+        <img class="step-img" src="https://ts1.tc.mm.bing.net/th/id/R-C.0e999efd9f6cf17feacea3f187d813b2?rik=0y6qztfMcy0uiQ&riu=http%3a%2f%2fgz.news.cn%2f20251208%2f0d154bdf69644a85a1a260b730797e58%2f202512080d154bdf69644a85a1a260b730797e58_20251208bd306a9e0027465591cbf358b9b17ee9.jpg&ehk=8YyYrXxOBDDCm5vv09I5RXQL%2fkjC4pfUAZwgklk2I3k%3d&risl=&pid=ImgRaw&r=0" alt="缠线制作绣芯">
+      </div>
+    </div>
+    <div class="step-item" onclick="toggleStep(this)">
+      ③ 盘绕钉绣勾勒纹样轮廓
+      <div class="step-content">
+        <img class="step-img" src="https://ts1.tc.mm.bing.net/th/id/R-C.87c663f71fbe4994004199a5f71a2718?rik=JTtcCltZat66sw&riu=http%3a%2f%2fk.sinaimg.cn%2fn%2fsinakd20220717s%2f87%2fw512h375%2f20220717%2fe324-4620593b4615a575832a60465e4c58e4.png%2fw700d1q75cms.jpg&ehk=b%2fz8Ryegtixp99T4ZvlDYcu5xMvwC%2bqD8WdhOMeTU8I%3d&risl=&pid=ImgRaw&r=0" alt="盘绣轮廓">
+      </div>
+    </div>
+    <div class="step-item" onclick="toggleStep(this)">
+      ④ 分层填色塑造立体浮雕
+      <div class="step-content">
+        <img class="step-img" src="https://ts1.tc.mm.bing.net/th/id/R-C.c6c25fc040dcdff35c64b06f37d85595?rik=V4BC5js0ad96Sw&riu=http%3a%2f%2fwww.cpon.cn%2fuploads%2f20170705%2f7.jpg&ehk=PTpRnPBqG9gZcZ9YT9KhOrUrXMSVj6M7uFoNDGBZHpE%3d&risl=&pid=ImgRaw&r=0" alt="填色塑造浮雕">
+      </div>
+    </div>
+    <div class="step-item" onclick="toggleStep(this)">
+      ⑤ 细节修饰完成传世绣品
+      <div class="step-content">
+        <img class="step-img" src="https://x0.ifengimg.com/res/2020/F72F3EB84914B4950F904A53CE3D4E1213568448_size101_w640_h393.jpeg" alt="成品马尾绣">
+      </div>
+    </div>
+  </div>
+  <button class="btn" style="margin-top:40px" onclick="nextPage()">非遗知识闯关</button>
+</div>
+
+<!-- 答题页面 -->
+<div class="page" id="p5">
+  <h2 style="margin:20px 0 12px">非遗知识闯关（20题·高阶版）</h2>
+  <div class="question-box">
+    <p>1. 马尾绣所用马尾毛需经过脱脂、揉搓等预处理，主要目的是？</p>
+    <div class="option" onclick="checkAns(1,'A',this)">A. 提升毛发光泽度</div>
+    <div class="option" onclick="checkAns(1,'B',this)">B. 软化纤维、防止霉变生虫</div>
+    <div class="option" onclick="checkAns(1,'C',this)">C. 好上色</div>
+    <p class="img-tip" id="t1"></p>
+  </div>
+  <div class="question-box">
+    <p>2. 唐宋时期水族马尾绣纹样风格的主要特征是？</p>
+    <div class="option" onclick="checkAns(2,'A',this)">A. 繁复华丽、多层套色</div>
+    <div class="option" onclick="checkAns(2,'B',this)">B. 融入大量中原宫廷纹样</div>
+    <div class="option" onclick="checkAns(2,'C',this)">C. 造型简约、以自然图腾为主</div>
+    <p class="img-tip" id="t2"></p>
+  </div>
+  <div class="question-box">
+    <p>3. 马尾绣“缠丝”工序与普通盘金绣的核心差异在于？</p>
+    <div class="option" onclick="checkAns(3,'A',this)">A. 以马尾毛为内芯塑造立体基底</div>
+    <div class="option" onclick="checkAns(3,'B',this)">B. 使用彩色丝线进行缠绕</div>
+    <div class="option" onclick="checkAns(3,'C',this)">C. 仅用于服饰边缘装饰</div>
+    <p class="img-tip" id="t3"></p>
+  </div>
+  <div class="question-box">
+    <p>4. 水族背扇类马尾绣，中心主纹一般象征？</p>
+    <div class="option" onclick="checkAns(4,'A',this)">A. 财富与地位</div>
+    <div class="option" onclick="checkAns(4,'B',this)">B. 护佑孩童、祈求平安</div>
+    <div class="option" onclick="checkAns(4,'C',this)">C. 族群迁徙路线</div>
+    <p class="img-tip" id="t4"></p>
+  </div>
+  <div class="question-box">
+    <p>5. 清代中后期，马尾绣开始大量出现龙凤纹样，原因是？</p>
+    <div class="option" onclick="checkAns(5,'A',this)">A. 本土图腾自然演变</div>
+    <div class="option" onclick="checkAns(5,'B',this)">B. 染料工艺取得突破</div>
+    <div class="option" onclick="checkAns(5,'C',this)">C. 民族文化交流不断加深</div>
+    <p class="img-tip" id="t5"></p>
+  </div>
+  <div class="question-box">
+    <p>6. 建国后至改革开放前，马尾绣的主要存续形式是？</p>
+    <div class="option" onclick="checkAns(6,'A',this)">A. 家族内部代代相传</div>
+    <div class="option" onclick="checkAns(6,'B',this)">B. 规模化工厂生产</div>
+    <div class="option" onclick="checkAns(6,'C',this)">C. 文旅景区商业售卖</div>
+    <p class="img-tip" id="t6"></p>
+  </div>
+  <div class="question-box">
+    <p>7. 国家级非遗名录申报时，马尾绣完整申报名称是？</p>
+    <div class="option" onclick="checkAns(7,'A',this)">A. 贵州马尾绣</div>
+    <div class="option" onclick="checkAns(7,'B',this)">B. 水族马尾绣</div>
+    <div class="option" onclick="checkAns(7,'C',this)">C. 西南民族刺绣</div>
+    <p class="img-tip" id="t7"></p>
+  </div>
+  <div class="question-box">
+    <p>8. 当下非遗帮扶政策中，对马尾绣传承人群的主要扶持方向是？</p>
+    <div class="option" onclick="checkAns(8,'A',this)">A. 仅限文物复刻修复</div>
+    <div class="option" onclick="checkAns(8,'B',this)">B. 纯表演展示技艺</div>
+    <div class="option" onclick="checkAns(8,'C',this)">C. 技艺培训+文创转化</div>
+    <p class="img-tip" id="t8"></p>
+  </div>
+  <div class="question-box">
+    <p>9. 除三都县外，下列哪个区域也有零星马尾绣传承群落？</p>
+    <div class="option" onclick="checkAns(9,'A',this)">A. 黔南州荔波、独山部分乡镇</div>
+    <div class="option" onclick="checkAns(9,'B',this)">B. 黔东南州凯里市区</div>
+    <div class="option" onclick="checkAns(9,'C',this)">C. 黔西南州兴义城区</div>
+    <p class="img-tip" id="t9"></p>
+  </div>
+  <div class="question-box">
+    <p>10. 马尾绣钉绣针法的走线特点是？</p>
+    <div class="option" onclick="checkAns(10,'A',this)">A. 直线平铺、疏密均匀</div>
+    <div class="option" onclick="checkAns(10,'B',this)">B. 沿骨架环绕固定，呈连续弧状</div>
+    <div class="option" onclick="checkAns(10,'C',this)">C. 交叉叠压、大面积覆盖</div>
+    <p class="img-tip" id="t10"></p>
+  </div>
+  <div class="question-box">
+    <p>11. 传统马尾绣中，水波纹纹样主要寓意？</p>
+    <div class="option" onclick="checkAns(11,'A',this)">A. 傍水而居、敬畏水系</div>
+    <div class="option" onclick="checkAns(11,'B',this)">B. 祝愿财源滚滚</div>
+    <div class="option" onclick="checkAns(11,'C',this)">C. 象征四季更迭</div>
+    <p class="img-tip" id="t11"></p>
+  </div>
+  <div class="question-box">
+    <p>12. “刺绣活化石”的评价，主要依据其哪一特征？</p>
+    <div class="option" onclick="checkAns(12,'A',this)">A. 传世藏品数量庞大</div>
+    <div class="option" onclick="checkAns(12,'B',this)">B. 地域传播范围极广</div>
+    <div class="option" onclick="checkAns(12,'C',this)">C. 保留先秦两汉原始刺绣形制</div>
+    <p class="img-tip" id="t12"></p>
+  </div>
+  <div class="question-box">
+    <p>13. 水族古歌、传说很多依靠绣纹留存，这体现了马尾绣的？</p>
+    <div class="option" onclick="checkAns(13,'A',this)">A. 装饰审美功能</div>
+    <div class="option" onclick="checkAns(13,'B',this)">B. 图文叙事功能</div>
+    <div class="option" onclick="checkAns(13,'C',this)">C. 礼仪祭祀功能</div>
+    <p class="img-tip" id="t13"></p>
+  </div>
+  <div class="question-box">
+    <p>14. 优质马尾绣原料，优先选用马匹哪个时段的尾毛？</p>
+    <div class="option" onclick="checkAns(14,'A',this)">A. 幼年马软毛</div>
+    <div class="option" onclick="checkAns(14,'B',this)">B. 老年马枯毛</div>
+    <div class="option" onclick="checkAns(14,'C',this)">C. 壮年马长毛</div>
+    <p class="img-tip" id="t14"></p>
+  </div>
+  <div class="question-box">
+    <p>15. 五道核心工序里，决定成品立体感强弱的关键环节是？</p>
+    <div class="option" onclick="checkAns(15,'A',this)">A. 缠丝塑形</div>
+    <div class="option" onclick="checkAns(15,'B',this)">B. 面料裁剪</div>
+    <div class="option" onclick="checkAns(15,'C',this)">C. 后期锁边</div>
+    <p class="img-tip" id="t15"></p>
+  </div>
+  <div class="question-box">
+    <p>16. 现代设计中，马尾绣较少应用于以下哪类产品？</p>
+    <div class="option" onclick="checkAns(16,'A',this)">A. 国风服饰配饰</div>
+    <div class="option" onclick="checkAns(16,'B',this)">B. 一次性日用耗材</div>
+    <div class="option" onclick="checkAns(16,'C',this)">C. 高端家居软装</div>
+    <p class="img-tip" id="t16"></p>
+  </div>
+  <div class="question-box">
+    <p>17. 水族传统婚俗中，新娘随身马尾绣绣品代表？</p>
+    <div class="option" onclick="checkAns(17,'A',this)">A. 家族财富多少</div>
+    <div class="option" onclick="checkAns(17,'B',this)">B. 社会身份等级</div>
+    <div class="option" onclick="checkAns(17,'C',this)">C. 女红技艺与家风传承</div>
+    <p class="img-tip" id="t17"></p>
+  </div>
+  <div class="question-box">
+    <p>18. 机绣对马尾绣冲击的核心原因，不包含？</p>
+    <div class="option" onclick="checkAns(18,'A',this)">A. 手工艺术价值偏低</div>
+    <div class="option" onclick="checkAns(18,'B',this)">B. 手工生产效率低下</div>
+    <div class="option" onclick="checkAns(18,'C',this)">C. 人工成本持续走高</div>
+    <p class="img-tip" id="t18"></p>
+  </div>
+  <div class="question-box">
+    <p>19. 数字化赋能马尾绣，当下最主流的应用是？</p>
+    <div class="option" onclick="checkAns(19,'A',this)">A. 机器完全替代手工制作</div>
+    <div class="option" onclick="checkAns(19,'B',this)">B. 纹样建模、辅助设计与传播</div>
+    <div class="option" onclick="checkAns(19,'C',this)">C. 批量复刻古旧老绣品</div>
+    <p class="img-tip" id="t19"></p>
+  </div>
+  <div class="question-box">
+    <p>20. 非遗工坊选址优先靠近村寨而非城区，首要原因是？</p>
+    <div class="option" onclick="checkAns(20,'A',this)">A. 依托原生文化与老艺人资源</div>
+    <div class="option" onclick="checkAns(20,'B',this)">B. 场地租金更加低廉</div>
+    <div class="option" onclick="checkAns(20,'C',this)">C. 交通条件更为便利</div>
+    <p class="img-tip" id="t20"></p>
+  </div>
+  <button class="btn" style="margin-top:40px" onclick="showResult()">提交答案，查看成绩与成就</button>
+</div>
+
+<!-- 结尾页 -->
+<div class="page" id="p6">
+  <h2 style="margin:20px 0 12px;text-align:center">一针载岁月，一线续千年</h2>
+  <img src="https://szb.fzshb.cn/fzshb/20251119/mhtml/fa2f96d84f86c6f8d8a5bd4c058887f2_img_224_116_549_366.png" alt="新旧马尾绣同框+水族村寨">
+  <p style="padding:0 10px">马尾绣承载着水族的文明与匠心，从深山老手艺，走到现代文创舞台。它不仅是刺绣技艺，更是大山里永不褪色的文化根脉。守护非遗文脉，传承指尖时光。</p>
+  <button class="btn" style="margin-top:40px" onclick="resetQuiz()">返回首页</button>
+</div>
+
+<!-- 成绩&成就弹窗 -->
+<div class="result-box" id="resultPop">
+  <h3>答题完成！</h3>
+  <p id="scoreText"></p>
+  <p id="levelText"></p>
+  <p id="achievementText"></p>
+  <button class="close-btn" onclick="closePop()">前往总结页</button>
+</div>
+
+</div>
+
+<script>
+let curPage = 0;
+let rightNum = 0;
+let answered = [];
+
+// 每道题标准答案
+const answerKey = {
+  1:'B',2:'C',3:'A',4:'B',5:'C',
+  6:'A',7:'B',8:'C',9:'A',10:'B',
+  11:'A',12:'C',13:'B',14:'C',15:'A',
+  16:'B',17:'C',18:'A',19:'B',20:'A'
+};
+
+// 解析文案
+const tips = [
+  "解析：新鲜马尾毛含油脂，预处理可软化纤维、去除油脂，避免存放中生虫霉变。",
+  "解析：唐宋时期马尾绣尚处早期发展阶段，造型质朴简约，以山水、鸟兽等自然图腾为主。",
+  "解析：普通盘金绣仅用金线装饰，马尾绣以马尾毛做内芯，这是二者最本质区别。",
+  "解析：婴幼儿背扇是水族代表性绣品，纹样寓意驱邪避凶，护佑孩童健康成长。",
+  "解析：清代地域交流频繁，中原龙凤纹样逐步融入马尾绣设计体系中。",
+  "解析：该阶段市场化程度低，马尾绣主要依靠家族口传心授、母女相传延续。",
+  "解析：官方非遗名录标准名称为「水族马尾绣」，明确归属民族传统技艺。",
+  "解析：现行扶持政策以技艺传承培训为基础，同时推动绣品文创转化，拓宽增收渠道。",
+  "解析：除核心地三都县外，荔波、独山相邻水族聚居乡镇仍保留少量传承人群。",
+  "解析：钉绣针法沿着马尾骨架环绕走线，形成连续弧形纹路，以此固定立体结构。",
+  "解析：水族依水而居，水波纹是经典图腾，表达对水系的依赖与敬畏。",
+  "解析：马尾绣完整保留先秦两汉原始刺绣工艺与形制，是研究古代刺绣的重要实物参照。",
+  "解析：水族无通用文字，依靠绣纹记录传说、古歌与历史，具备图文叙事作用。",
+  "解析：壮年马匹尾毛粗细适中、韧性强，是制作立体骨架的最优原料。",
+  "解析：缠丝塑形直接决定绣品隆起高度与整体立体感，是五道工序中的核心。",
+  "解析：马尾绣工艺复杂、成本偏高，多用于服饰、软装、文创，不适合一次性耗材。",
+  "解析：婚嫁中新娘的马尾绣作品，是展示自身女红技艺、体现家族家风的载体。",
+  "解析：手工马尾绣艺术价值极高，效率低、成本高才是被机绣冲击的主要原因。",
+  "解析：数字化多用于纹样绘制、3D建模、线上宣传，不会完全替代手工核心工艺。",
+  "解析：村寨拥有原生传承土壤、资深老艺人，是工坊优先落地的核心原因。"
+];
+
+const timeData = [
+  "上古至唐宋时期，水族先民牧马迁徙，就地取材用马尾制作刺绣，以纹样记录图腾与族群历史。",
+  "元明清时期工艺走向鼎盛，立体浮雕成型，受中原礼制影响，纹样更加丰富华贵。",
+  "晚清到20世纪末，机绣冲击导致古法马尾绣传承断层，手艺濒临失传。",
+  "2006年入选国家级非遗，老绣娘开班授课，年轻传承人创新设计，实现非遗新生。"
+];
+
+// 页面切换
+function nextPage(){
+  document.getElementById('p'+curPage).classList.remove('active');
+  curPage++;
+  document.getElementById('p'+curPage).classList.add('active');
+}
+
+// 误区展开
+function toggle(el) {
+  const content = el.nextElementSibling;
+  content.style.maxHeight = content.style.maxHeight ? null : content.scrollHeight + "px";
+}
+
+// 工艺图片展开
+function toggleStep(el) {
+  el.classList.toggle('open');
+}
+
+// 时间轴切换
+function switchTime(idx,el){
+  document.querySelectorAll('.time-node').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('timeText').innerText = timeData[idx];
+}
+
+// 核心答题判断逻辑（已修复）
+function checkAns(qNum, userSel, dom){
+  if(answered.includes(qNum)) return;
+  answered.push(qNum);
+
+  const correct = answerKey[qNum];
+  const tipDom = document.getElementById('t' + qNum);
+
+  if(userSel === correct){
+    // 答对
+    rightNum++;
+    dom.style.background = "#e8f5e9";
+    dom.style.borderColor = "#4caf50";
+    tipDom.innerHTML = `<span class="correct-text">✅ 回答正确</span> ${tips[qNum-1]}`;
+  }else{
+    // 答错
+    dom.style.background = "#ffebee";
+    dom.style.borderColor = "#f44336";
+    tipDom.innerHTML = `<span class="wrong-text">❌ 回答错误</span> ${tips[qNum-1]}`;
+  }
+}
+
+// 成绩统计弹窗
+function showResult(){
+  const total = 20;
+  const rate = (rightNum / total * 100).toFixed(0);
+  let level,achievement;
+
+  if(rightNum >= 18){
+    level = "知识大师";
+    achievement = "🏆 非遗守望者 · 满级成就";
+  }else if(rightNum >= 14){
+    level = "资深爱好者";
+    achievement = "⭐ 绣艺探秘者 · 高阶成就";
+  }else if(rightNum >= 10){
+    level = "入门学习者";
+    achievement = "📜 文化探索者 · 基础成就";
+  }else{
+    level = "初学新人";
+    achievement = "🌱 初识非遗 · 见习成就";
+  }
+
+  document.getElementById("scoreText").innerText = `本次共20题，你答对 ${rightNum} 题，正确率 ${rate}%`;
+  document.getElementById("levelText").innerText = `知识等级：${level}`;
+  document.getElementById("achievementText").innerText = `解锁成就：${achievement}`;
+  document.getElementById("resultPop").style.display = "block";
+}
+
+// 关闭弹窗
+function closePop(){
+  document.getElementById("resultPop").style.display = "none";
+  nextPage();
+}
+
+// 重置全部
+function resetQuiz(){
+  rightNum = 0;
+  answered = [];
+  curPage = 0;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('p0').classList.add('active');
+  for(let i=1;i<=20;i++){
+    document.getElementById('t'+i).innerText = "";
+  }
+  document.querySelectorAll('.option').forEach(opt=>{
+    opt.style.background="#fff";
+    opt.style.borderColor="#ddd";
+  });
+}
+</script>
+</body>
+</html>
